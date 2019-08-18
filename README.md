@@ -13,7 +13,8 @@ start GO111MODULE mode
 export GO111MODULE=on
 ```
 
-run web server
+### run
+start web server
 ```
 go run cmd/main.go
 ```
