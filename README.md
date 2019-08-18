@@ -13,6 +13,11 @@ start GO111MODULE mode
 export GO111MODULE=on
 ```
 
+run web server
+```
+go run cmd/main.go
+```
+
 ### Docker
 If you had install Docker...
 
@@ -24,6 +29,11 @@ docker build -t <amis-img> .
 run container
 ```
 docker run -it --rm <amis-img>
+```
+
+run web server
+```
+go run cmd/main.go
 ```
 
 ### Docker-Compose
