@@ -1,0 +1,9 @@
+version: '3'
+services:
+  amis:
+    build: 
+      context: .
+    ports:
+      - 1323:1323
+    volumes:
+      - ./:/go/src/amis

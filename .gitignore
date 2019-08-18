@@ -1,0 +1,9 @@
+.DS_Store
+*.log
+configs/local.json
+.idea
+tmp/
+mysql/
+.vscode/
+main
+amis

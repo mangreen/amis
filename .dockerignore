@@ -1,0 +1,10 @@
+.DS_Store
+*.log
+.vscode/
+.idea
+main
+docker-compose.yml
+.dockerignore
+*.swp
+.git
+tmp/
