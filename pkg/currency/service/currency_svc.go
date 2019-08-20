@@ -38,14 +38,14 @@ func NewCurrencyService() currency.CurrencyService {
 	return &currencyService{}
 }
 
-func (svc *currencyService) GetCurrency(coin string, start int64) (*currency.Currency, error) {
+func (svc *currencyService) GetCurrency(ctx context.Context, coin string, start int64) (*currency.Currency, error) {
 	crcy := &currency.Currency{}
 
-	maxTwdPrice, _ := svc.GetMax(coin+"twd", int32(start))
-	maxUsdPrice, _ := svc.GetMax(coin+"usdt", int32(start))
+	maxTwdPrice, _ := svc.GetMax(ctx, coin+"twd", int32(start))
+	maxUsdPrice, _ := svc.GetMax(ctx, coin+"usdt", int32(start))
 
-	geckoTwdPrice, _ := svc.GetGecko(CoinMap[coin], "twd", start)
-	geckoUsdPrice, _ := svc.GetGecko(CoinMap[coin], "usd", start)
+	geckoTwdPrice, _ := svc.GetGecko(ctx, CoinMap[coin], "twd", start)
+	geckoUsdPrice, _ := svc.GetGecko(ctx, CoinMap[coin], "usd", start)
 
 	var twdPrice float64
 	var usdPrice float64
@@ -73,11 +73,11 @@ func (svc *currencyService) GetCurrency(coin string, start int64) (*currency.Cur
 	return crcy, nil
 }
 
-func (svc *currencyService) GetMax(market string, timestamp int32) (float64, error) {
+func (svc *currencyService) GetMax(ctx context.Context, market string, timestamp int32) (float64, error) {
 	maxclient := max.NewClient()
 	defer maxclient.Close()
 
-	results, err := maxclient.K(context.Background(), market, max.Limit(1), max.Period(1), max.Timestamp(timestamp))
+	results, err := maxclient.K(ctx, market, max.Limit(1), max.Period(1), max.Timestamp(timestamp))
 	if err != nil {
 		return 0, err
 	}
@@ -89,7 +89,7 @@ func (svc *currencyService) GetMax(market string, timestamp int32) (float64, err
 	return results[0].Close, nil
 }
 
-func (svc *currencyService) GetGecko(id string, vs string, from int64) (float64, error) {
+func (svc *currencyService) GetGecko(ctx context.Context, id string, vs string, from int64) (float64, error) {
 	to := time.Unix(from, 0).Add(time.Hour * time.Duration(1)).Unix()
 	param := req.Param{
 		"vs_currency": vs,
@@ -99,7 +99,7 @@ func (svc *currencyService) GetGecko(id string, vs string, from int64) (float64,
 
 	url := fmt.Sprintf(coingecko, id)
 	client := &http.Client{Timeout: 30 * time.Second}
-	resp, err := req.Get(url, client, param)
+	resp, err := req.Get(url, ctx, client, param)
 	if err != nil {
 		return 0, err
 	}

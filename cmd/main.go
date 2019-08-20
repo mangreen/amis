@@ -1,7 +1,13 @@
 package main
 
 import (
+	"context"
+	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	currencyHandler "amis/pkg/currency/delivery/http"
 	currencyService "amis/pkg/currency/service"
@@ -61,5 +67,23 @@ func main() {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
-	e.Logger.Fatal(e.Start(":1323"))
+	httpServer := &http.Server{
+		Addr: ":1323",
+	}
+	go func() {
+		e.Logger.Fatal(e.StartServer(httpServer))
+	}()
+
+	stopChan := make(chan os.Signal, 1)
+	signal.Notify(stopChan, syscall.SIGINT, syscall.SIGKILL, syscall.SIGHUP, syscall.SIGTERM)
+	<-stopChan
+	log.Println("main: shutting down server...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	if err := httpServer.Shutdown(ctx); err != nil {
+		log.Fatalf("main: http server shutdown error: %v", err)
+	} else {
+		log.Println("main: gracefully stopped")
+	}
 }

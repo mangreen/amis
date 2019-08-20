@@ -1,6 +1,7 @@
-# Mini Project
+# MaiCoin Software Engineer Interview Project
 
 ## Description
+[Software Engineer Project](./SoftwareEngineerProject.pdf)
 
 ## Environment
 - Go 1.12

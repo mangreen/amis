@@ -1,8 +1,12 @@
 package currency
 
+import (
+	"context"
+)
+
 //go:generate mockgen -destination ./mock/mock_service.go -package mocsvc amis/pkg/currency/service CurrencyService
 type CurrencyService interface {
-	GetCurrency(coin string, start int64) (*Currency, error)
+	GetCurrency(ctx context.Context, coin string, start int64) (*Currency, error)
 }
 
 type Currency struct {

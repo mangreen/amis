@@ -36,6 +36,8 @@ func NewCurrencyHandler(e *echo.Echo, currencySvc currency.CurrencyService) *cur
 }
 
 func (h *currencyHandler) list(c echo.Context) error {
+	ctx := c.Request().Context()
+
 	qs := new(currencyReq)
 
 	if err := c.Bind(qs); err != nil {
@@ -68,7 +70,7 @@ func (h *currencyHandler) list(c echo.Context) error {
 
 	st := startTime.Unix()
 
-	crcy, err := h.currencySvc.GetCurrency(strings.ToLower(qs.Coin), st)
+	crcy, err := h.currencySvc.GetCurrency(ctx, strings.ToLower(qs.Coin), st)
 	if err != nil {
 		c.Logger().Error(err)
 		return err
