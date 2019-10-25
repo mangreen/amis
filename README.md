@@ -1,4 +1,4 @@
-# MaiCoin Software Engineer Interview Project
+# Mini Project
 
 ## Description
 [Software Engineer Project](./SoftwareEngineerProject.pdf)
